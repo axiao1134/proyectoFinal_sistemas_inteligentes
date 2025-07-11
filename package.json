@@ -1,0 +1,24 @@
+{
+  "name": "proyectofinal_sistemas_inteligentes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node --watch server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/axiao1134/proyectoFinal_sistemas_inteligentes.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/axiao1134/proyectoFinal_sistemas_inteligentes/issues"
+  },
+  "homepage": "https://github.com/axiao1134/proyectoFinal_sistemas_inteligentes#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
