@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ML-Explainer: Una Aventura Interactiva</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+  <header>
+    <h1>ML-Explainer: Una Aventura Interactiva</h1>
+    <nav>
+      <a href="#decision-trees">Árboles de Decisión</a>
+      <a href="#reinforcement-learning">Reinforcement Learning</a>
+      <a href="#conclusion">Conclusión</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="portada">
+      <h2>Comprende el Machine Learning de Forma Interactiva</h2>
+      <p><strong>Bienvenido a ML-Explainer.</strong> Esta página es un laboratorio interactivo diseñado para
+        desmitificar dos de los conceptos más poderosos de la inteligencia artificial. Aquí, no solo leerás sobre los
+        algoritmos, sino que podrás jugar con ellos, ajustar sus parámetros y ver cómo "piensan" en tiempo real.</p>
+      <p><strong>Autor:</strong> Zihao Xiao/Jesús Tapia/Benjamín Fernández</p>
+    </section>
+
+    <section id="decision-trees">
+      <h2>🌳 Árboles de Decisión</h2>
+      <p>Los árboles de decisión son uno de los algoritmos de <strong>aprendizaje supervisado</strong> más intuitivos
+        del Machine Learning. Se utilizan principalmente para tareas de <strong>clasificación</strong> (predecir una
+        categoría) y <strong>regresión</strong> (predecir un valor numérico), imitando la forma en que los humanos toman
+        decisiones mediante una serie de preguntas.</p>
+      <h3>La Idea en Simple: Un Juego de Preguntas Inteligente</h3>
+      <p>Imagina que quieres decidir si jugar tenis. Un árbol de decisión te guía con preguntas, pero no son preguntas
+        al azar. El algoritmo busca la "pregunta más inteligente" en cada paso, aquella que mejor divide los datos en
+        grupos lo más puros posible. Por ejemplo, si al preguntar por el `Pronóstico` separamos perfectamente los días
+        de juego de los de no juego, esa sería una excelente primera pregunta. Este proceso de selección se basa en
+        criterios matemáticos como la <strong>Ganancia de Información</strong> o la <strong>Impureza de Gini</strong>,
+        que miden cuánta "claridad" ganamos con cada pregunta. El árbol se construye de forma jerárquica, haciendo las
+        preguntas más importantes primero, hasta llegar a una conclusión.</p>
+
+      <h3>Conceptos Clave (Definición Formal)</h3>
+      <ul>
+        <li><strong>Nodo:</strong> Es como una encrucijada en el camino. En este punto, se evalúa una característica de
+          los datos a través de una pregunta (`&iquest;Humedad > 70%?`). El primer nodo, desde donde parte todo, se
+          llama <strong>nodo raíz</strong>.</li>
+        <li><strong>Rama (o Arista):</strong> Es el camino que se toma después de responder la pregunta en un nodo. Cada
+          rama está etiquetada con una posible respuesta (`Sí`, `No`, `Soleado`, `Nublado`) y te conduce a la siguiente
+          pregunta o a la conclusión final.</li>
+        <li><strong>Hoja (o Nodo Terminal):</strong> Es el destino final de un camino. Aquí no hay más preguntas. La
+          <strong>hoja</strong> contiene la predicción final del modelo (`SÍ JUGAR`). Todas las muestras de datos que
+          recorren el mismo camino hasta una hoja reciben la misma predicción.
+        </li>
+      </ul>
+
+      <div class="controls">
+        <label for="depth-slider">Profundidad del Árbol:</label>
+        <input type="range" id="depth-slider" min="1" max="4" value="4">
+      </div>
+      <div id="tree-visualization"></div>
+      <h3>El Código Detrás de la Decisión</h3>
+      <pre><code class="language-js">
+          <span class="code-comment">// Esta función simula la lógica de nuestro árbol de decisión.</span>
+          <span class="code-keyword">function</span> <span class="code-function">decidirSiJugarTenis</span>(<span
+            class="code-param">pronostico</span>, <span class="code-param">humedad</span>, <span
+            class="code-param">viento</span>) {
+
+          <span class="code-comment">// Primera pregunta (Nodo raíz)</span>
+          <span class="code-keyword">if</span> (pronostico === <span class="code-string">'Soleado'</span>) {
+
+          <span class="code-comment">// Segunda pregunta</span>
+          <span class="code-keyword">if</span> (humedad === <span class="code-string">'Alta'</span>) {
+          <span class="code-keyword">return</span> <span class="code-string">'NO JUGAR'</span>; <span
+            class="code-comment">// Hoja</span>
+          } <span class="code-keyword">else if</span> (humedad === <span class="code-string">'Normal'</span>) {
+          <span class="code-keyword">return</span> <span class="code-string">'SÍ JUGAR'</span>; <span
+            class="code-comment">// Hoja</span>
+          }
+
+          } <span class="code-keyword">else if</span> (pronostico === <span class="code-string">'Nublado'</span>) {
+
+          <span class="code-keyword">return</span> <span class="code-string">'SÍ JUGAR'</span>; <span
+            class="code-comment">// Hoja</span>
+
+          } <span class="code-keyword">else if</span> (pronostico === <span class="code-string">'Lluvioso'</span>) {
+
+          <span class="code-comment">// Tercera pregunta</span>
+          <span class="code-keyword">if</span> (viento === <span class="code-string">'Fuerte'</span>) {
+          <span class="code-keyword">return</span> <span class="code-string">'NO JUGAR'</span>; <span
+            class="code-comment">// Hoja</span>
+          } <span class="code-keyword">else if</span> (viento === <span class="code-string">'Débil'</span>) {
+          <span class="code-keyword">return</span> <span class="code-string">'SÍ JUGAR'</span>; <span
+            class="code-comment">// Hoja</span>
+          }
+          }
+          }
+
+          <span class="code-comment">// Ejemplo de uso:</span>
+          <span class="code-comment">// const decision = decidirSiJugarTenis('Soleado', 'Normal');</span>
+          <span class="code-comment">// console.log(decision); // Resultado: 'SÍ JUGAR'</span>
+        </code></pre>
+    </section>
+
+    <section id="reinforcement-learning">
+      <h2>🤖 Aprendizaje por Refuerzo</h2>
+      <p>El Aprendizaje por Refuerzo (RL) es un paradigma de Machine Learning inspirado en la psicología conductista. A
+        diferencia del aprendizaje supervisado, no se le dan respuestas correctas. En su lugar, el sistema aprende a
+        tomar decisiones secuenciales a través de la <strong>prueba y el error</strong>, interactuando con un entorno
+        para maximizar una recompensa acumulada a largo plazo.</p>
+      <h3>La Idea en Simple: Explorar vs. Explotar</h3>
+      <p>Piensa en la analogía de "entrenar a una mascota", pero vamos un paso más allá. Imagina que estás en una ciudad
+        nueva y encuentras un restaurante bueno cerca de tu hotel. Tienes dos opciones cada noche:
+        <strong>Explotar</strong> tu conocimiento y volver al restaurante que ya sabes que es bueno (una recompensa
+        segura), o **Explorar** y probar un restaurante nuevo y desconocido. Este nuevo lugar podría ser terrible
+        (castigo) o podría ser el mejor de la ciudad (una recompensa mucho mayor). El agente de RL enfrenta
+        constantemente este dilema: ¿debería usar la mejor estrategia que conoce hasta ahora (explotar) o debería probar
+        algo nuevo con la esperanza de descubrir una estrategia aún mejor (explorar)? El equilibrio entre estas dos
+        acciones es fundamental para un buen aprendizaje.
+      </p>
+      <h3>Conceptos Clave (Definición Formal)</h3>
+      <ul>
+        <li><strong>Agente:</strong> Es el 'protagonista' que aprende y toma las decisiones. No es solo un objeto, sino
+          el 'aprendiz' del sistema. En nuestro laberinto, es el círculo azul.</li>
+        <li><strong>Entorno:</strong> Es el 'universo' donde el agente existe y actúa. El entorno tiene sus propias
+          reglas (ej. "no se puede atravesar muros") y responde a las acciones del agente dándole un nuevo estado y una
+          recompensa.</li>
+        <li><strong>Acción:</strong> Es una de las jugadas posibles que el agente puede realizar desde su estado actual.
+          El conjunto de todas las acciones posibles (arriba, abajo, etc.) define su capacidad de movimiento.</li>
+        <li><strong>Recompensa:</strong> Es la retroalimentación numérica que el entorno le da al agente. Le dice si su
+          última acción fue buena (recompensa positiva), mala (negativa) o neutra. Es el principal motor del
+          aprendizaje.</li>
+        <li><strong>Política (Policy):</strong> Esta es la pieza más importante. Es el 'cerebro' o la estrategia que el
+          agente desarrolla. Una política es un mapa que le dice al agente cuál es la mejor acción a tomar en cada
+          estado posible para maximizar la recompensa total a futuro. Las flechas en nuestro laberinto son una
+          visualización de la política.</li>
+      </ul>
+
+      <div id="rl-simulation">
+        <div id="rl-controls">
+          <div class="slider-group">
+            <div class="slider-container">
+              <label for="alpha-slider">Tasa de Aprendizaje (&alpha;): <span id="alpha-value">0.1</span></label>
+              <input type="range" id="alpha-slider" min="0.1" max="1" step="0.1" value="0.1">
+            </div>
+            <div class="slider-container">
+              <label for="gamma-slider">Factor de Descuento (&gamma;): <span id="gamma-value">0.9</span></label>
+              <input type="range" id="gamma-slider" min="0.1" max="1" step="0.1" value="0.9">
+            </div>
+            <div class="slider-container">
+              <label for="epsilon-slider">Tasa de Exploración (&epsilon;): <span id="epsilon-value">0.2</span></label>
+              <input type="range" id="epsilon-slider" min="0.1" max="1" step="0.1" value="0.2">
+            </div>
+          </div>
+          <div class="control-group main-controls">
+            <button id="start-pause-btn" class="btn">Iniciar Entrenamiento</button>
+            <button id="reset-rl-btn" class="btn">Reiniciar Todo</button>
+          </div>
+          <div class="slider-container speed-control">
+            <label for="speed-slider">Velocidad de Simulación:</label>
+            <input type="range" id="speed-slider" min="10" max="500" value="150">
+          </div>
+          <div class="info-group">
+            <div class="info">Episodio: <span id="episode-count">0</span></div>
+            <div class="info">Pasos: <span id="step-count">0</span></div>
+            <div class="info">Última Recompensa: <span id="reward-display">0</span></div>
+          </div>
+        </div>
+        <div id="rl-dashboard">
+          <div id="maze-container"></div>
+          <div id="rl-chart-container"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="conclusion">
+      <h2>📊 Conclusiones y Comparativa</h2>
+
+      <h4>El Paradigma de Aprendizaje: Datos vs. Interacción</h4>
+      <p>La diferencia más fundamental radica en <em>cómo</em> aprende cada modelo. Un <strong>Árbol de
+          Decisión</strong> opera bajo un paradigma de <strong>aprendizaje supervisado</strong>. Es como un estudiante
+        al que se le entrega un libro de texto con todos los problemas y sus soluciones (un dataset etiquetado). Su
+        objetivo es estudiar este material estático y crear un conjunto de reglas claras para poder resolver problemas
+        similares en el futuro. No puede aprender nada nuevo sin un nuevo conjunto de datos.</p>
+      <p>Por el contrario, el <strong>Aprendizaje por Refuerzo</strong> aprende de la <strong>interacción
+          dinámica</strong> con un entorno. Es como un bebé aprendiendo a caminar: no tiene un manual, sino que aprende
+        a través de la experiencia. Realiza una acción (un paso), recibe una señal (se cae o se mantiene en pie) y
+        ajusta su comportamiento futuro en base a esa retroalimentación. Su conocimiento se construye a través de la
+        prueba y el error para lograr un objetivo a largo plazo.</p>
+
+      <h4>Interpretabilidad: La "Caja Blanca" vs. la "Caja Negra"</h4>
+      <p>La gran ventaja de los Árboles de Decisión es su alta interpretabilidad; son un modelo de <strong>"caja
+          blanca"</strong>. Podemos examinar la estructura del árbol y seguir exactamente la secuencia de reglas que
+        llevaron a una predicción específica. Esto es vital en campos como las finanzas o la medicina, donde es crucial
+        poder justificar una decisión.</p>
+      <p>El RL, a menudo, resulta en una <strong>"caja negra"</strong>. Aunque podemos observar la política final (las
+        flechas en nuestro laberinto), la lógica subyacente es una compleja tabla de valores (la Q-Table) que no ofrece
+        una explicación intuitiva de por qué una acción es preferible a otra. El comportamiento óptimo "emerge" del
+        entrenamiento, pero no se presenta como un conjunto de reglas legibles.</p>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Característica</th>
+              <th>Árboles de Decisión</th>
+              <th>Aprendizaje por Refuerzo (RL)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Tipo de Aprendizaje</strong></td>
+              <td>Supervisado (aprende de datos etiquetados)</td>
+              <td>Por Interacción (aprende de recompensas y castigos)</td>
+            </tr>
+            <tr>
+              <td><strong>Datos Necesarios</strong></td>
+              <td>Un conjunto de datos (dataset) con ejemplos y sus resultados correctos.</td>
+              <td>Un entorno definido, un conjunto de acciones y una función de recompensa.</td>
+            </tr>
+            <tr>
+              <td><strong>Objetivo Principal</strong></td>
+              <td>Predecir un valor o clasificar una entidad basándose en sus características.</td>
+              <td>Aprender una secuencia de acciones para maximizar una recompensa a largo plazo.</td>
+            </tr>
+            <tr>
+              <td><strong>Interpretabilidad</strong></td>
+              <td>Muy alta. Las reglas de decisión son fáciles de leer y entender (caja blanca).</td>
+              <td>Variable. La política puede ser simple o extremadamente compleja y difícil de interpretar.</td>
+            </tr>
+            <tr>
+              <td><strong>Aplicaciones Típicas</strong></td>
+              <td>Diagnóstico médico, aprobación de créditos, segmentación de clientes.</td>
+              <td>Robótica, control de sistemas, entrenamiento de IAs para juegos, optimización de rutas.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Recomendaciones Finales</h3>
+      <p>Este proyecto demuestra que la mejor forma de entender un algoritmo es viéndolo en acción. Te animamos a
+        experimentar: ajusta la profundidad del árbol para ver el sobreajuste, o modifica los parámetros del agente de
+        RL para ver cómo se vuelve más "impaciente" o "curioso". La intuición que se gana con estas interacciones es
+        invaluable.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 - Universidad de La Frontera</p>
+    <p><a href="https://github.com/axiao1134/proyectoFinal_sistemas_inteligentes" target="_blank">Ver Código en
+        GitHub</a></p>
+  </footer>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script type="module" src="js/index.js"></script>
+</body>
+
+</html>
