@@ -6,10 +6,13 @@ let agentPosition;
 let qTable = {};
 let episode = 0;
 let steps = 0;
-let alpha = 0.2;
-let gamma = 0.8;
-let epsilon = 0.1;
+let alpha = 0.9;
+let gamma = 0.6;
+let epsilon = 0.2;
 let simulationInterval;
+let episodeDisplay;
+let stepDisplay;
+let rewardDisplay;
 
 export const initializeQLearning = () => {
   const mazeContainer = document.getElementById('maze-container');
@@ -21,6 +24,14 @@ export const initializeQLearning = () => {
 
   document.getElementById('start-pause-btn').addEventListener('click', toggleSimulation);
   document.getElementById('reset-rl-btn').addEventListener('click', resetSimulation);
+
+  episodeDisplay = document.getElementById('episode-count');
+  stepDisplay = document.getElementById('step-count');
+  rewardDisplay = document.getElementById('reward-display');
+
+  episodeDisplay.textContent = episode;
+  stepDisplay.textContent = steps;
+  rewardDisplay.textContent = 0;
 }
 
 const simulationStep = () => {
@@ -40,11 +51,18 @@ const simulationStep = () => {
   updateAgent(agentPosition);
   steps++;
 
+  stepDisplay.textContent = steps;
+  rewardDisplay.textContent = reward;
+
   const cellValue = mazeLayout[agentPosition.row][agentPosition.col];
   if (cellValue === 'G') {
-    clearInterval(simulationInterval);
-    simulationInterval = null;
     console.log(`✅ Episodio ${episode} terminado en ${steps} pasos`);
+    episode++;
+    episodeDisplay.textContent = episode;
+    steps = 0;
+    stepDisplay.textContent = steps;
+    agentPosition = findStart(mazeLayout);
+    updateAgent(agentPosition);
   }
 }
 
@@ -57,7 +75,6 @@ const toggleSimulation = () => {
     btn.textContent = 'Reanudar';
   } else {
     simulationInterval = setInterval(simulationStep, 400);
-    episode++;
     steps = 0;
     btn.textContent = 'Pausar';
   }

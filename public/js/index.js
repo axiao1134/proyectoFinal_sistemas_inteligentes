@@ -5,4 +5,3 @@ document.addEventListener('DOMContentLoaded', () => {
   renderDecisionTree('#tree-visualization', '#depth-slider');
   initializeQLearning();
 });
-

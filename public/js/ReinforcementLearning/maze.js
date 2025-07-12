@@ -1,3 +1,5 @@
+import { DELTAS } from "./utils/maze.utils.js"
+
 export const mazeLayout = [
   ['S', 'P', 'P', 'P', 'W'],
   ['P', 'P', 'W', 'P', 'W'],
