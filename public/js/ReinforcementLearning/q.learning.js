@@ -1,6 +1,6 @@
 import { mazeLayout, ACTIONS, findStart, getNextPosition, getReward } from './maze.js';
 import { drawMaze, updateAgent } from './draw.js';
-import { createQTable, chooseAction } from './q.utils.js';
+import { createQTable, chooseAction } from './utils/q.utils.js';
 
 let agentPosition;
 let qTable = {};

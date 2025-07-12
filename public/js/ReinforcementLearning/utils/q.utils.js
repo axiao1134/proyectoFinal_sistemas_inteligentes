@@ -1,4 +1,4 @@
-import { ACTIONS } from './maze.js';
+import { ACTIONS } from './maze.utils.js';
 
 export const createQTable = (layout) => {
   const table = {};

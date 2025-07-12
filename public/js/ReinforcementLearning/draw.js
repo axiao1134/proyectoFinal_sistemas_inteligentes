@@ -1,4 +1,4 @@
-import { clearExistingAgents } from "./utils/agent.js";
+import { clearExistingAgents } from "./utils/agent.utils.js";
 import { cellClass } from "./utils/cell.utils.js";
 
 export const drawMaze = (container, layout) => {
