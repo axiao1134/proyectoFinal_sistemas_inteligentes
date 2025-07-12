@@ -1,8 +1,20 @@
-// js/decision_tree.js
+// =============================================================
+// Visualización interactiva de un árbol de decisión utilizando D3.js.
+// Permite explorar el árbol con un slider de profundidad y resalta
+// ancestros y conexiones al pasar el mouse.
+// Ejemplo basado en el dataset clásico "Play Tennis".
+// =============================================================
 
 document.addEventListener('DOMContentLoaded', function() {
 
-    // ✨ 1. DATOS DEL ÁRBOL COMPLETOS Y CORREGIDOS ✨
+     // =============================================================
+    // 1️ DEFINICIÓN DE DATOS DEL ÁRBOL DE DECISIÓN
+    // =============================================================
+    // Estructura jerárquica en JSON que representa el árbol:
+    // - Nodo raíz: "Pronóstico?"
+    // - Hijos: "Soleado", "Nublado", "Lluvioso"
+    // - Subniveles con atributos como "Humedad?", "Viento?" y decisiones "SÍ JUGAR", "NO JUGAR".
+    // =============================================================
     const treeData = {
         name: "Pronóstico?",
         children: [
@@ -37,7 +49,13 @@ document.addEventListener('DOMContentLoaded', function() {
         ]
     };
 
-    // 2. CONFIGURACIÓN DEL SVG
+      // =============================================================
+    // 2 CONFIGURACIÓN DEL SVG PARA LA VISUALIZACIÓN
+    // =============================================================
+    // - Se crea un SVG responsivo con márgenes.
+    // - Se define el área de dibujo.
+    // - Se inicializa la estructura de árbol D3 (`d3.tree()`) y la jerarquía.
+    // =============================================================
     const margin = { top: 40, right: 90, bottom: 50, left: 90 };
     const width = 800 - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
@@ -51,7 +69,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const treemap = d3.tree().size([height, width]);
     const root = d3.hierarchy(treeData, d => d.children);
 
-    // 3. FUNCIÓN PARA ACTUALIZAR LA VISUALIZACIÓN
+     // =============================================================
+    // 3️ update(depth)
+    // =============================================================
+    // Función principal de renderizado del árbol:
+    // - Limpia el SVG antes de cada render.
+    // - Filtra nodos según la profundidad elegida (slider).
+    // - Construye nodos e links del árbol.
+    // - Añade interactividad de resaltado de ancestros al hacer hover.
+    // - Coloca círculos y etiquetas en cada nodo.
+    // =============================================================
     function update(depth) {
         svg.selectAll("*").remove();
 
@@ -98,13 +125,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 4. EVENT LISTENER PARA EL SLIDER
+    // =============================================================
+    // 4️ CONFIGURACIÓN DEL SLIDER DE PROFUNDIDAD
+    // =============================================================
+    // Permite al usuario controlar cuántos niveles del árbol visualizar:
+    // - Obtiene el elemento slider por su ID.
+    // - Al cambiar su valor, se actualiza la visualización.
+    // =============================================================
     const slider = d3.select("#depth-slider");
     slider.on("input", function() {
         update(+this.value); 
     });
 
-    // Dibujo inicial
+     // =============================================================
+    // DIBUJO INICIAL
+    // =============================================================
+    // Calcula la profundidad máxima del árbol y la configura en el slider.
+    // Realiza el render inicial mostrando el árbol completo.
+    // =============================================================
     const maxDepth = root.height + 1;
     slider.attr("max", maxDepth).property("value", maxDepth);
     update(maxDepth);

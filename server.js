@@ -1,3 +1,8 @@
+// =============================================================
+// Servidor básico usando Express para servir archivos estáticos
+// y un archivo HTML principal para proyectos front-end.
+// Compatible con ES Modules (import/export).
+// =============================================================
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';

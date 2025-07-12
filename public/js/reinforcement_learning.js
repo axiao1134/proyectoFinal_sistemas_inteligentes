@@ -1,4 +1,16 @@
+
+// ====================
+// Reinforcement Learning Maze Simulator
+// Autor: (tu nombre aquí)
+// Descripción general:
+// Este script implementa un agente Q-Learning que aprende a recorrer un laberinto
+// usando HTML, CSS, JavaScript y D3.js para visualizar el entrenamiento, la política
+// aprendida y la evolución de pasos por episodio.
+// ====================
 document.addEventListener('DOMContentLoaded', function() {
+     // ====================
+    // SECCIÓN: Inicialización de referencias a elementos del DOM
+    // ====================
 
     const mazeContainer = document.getElementById('maze-container');
     const chartContainer = document.getElementById('rl-chart-container');
@@ -15,6 +27,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const gammaValueSpan = document.getElementById('gamma-value');
     const epsilonSlider = document.getElementById('epsilon-slider');
     const epsilonValueSpan = document.getElementById('epsilon-value');
+      // ====================
+    // SECCIÓN: Configuración del laberinto y variables RL
+    // ====================
 
     const mazeLayout = [
         ['S','P','P','P','W'],
@@ -30,6 +45,16 @@ document.addEventListener('DOMContentLoaded', function() {
     let qTable, episode, steps, agentPos;
     let episodeHistory, simulationInterval;
     let chart, x, y, line;
+    
+    // ====================
+    // gameStep()
+    // Ejecuta un paso de Q-Learning:
+    // - El agente elige una acción.
+    // - Transiciona al siguiente estado según la acción.
+    // - Calcula y actualiza el valor Q de la acción tomada.
+    // - Actualiza la interfaz y visualización.
+    // - Si alcanza la meta, reinicia episodio y actualiza la gráfica.
+    // ====================
 
     function gameStep() {
         const stateKey = `${agentPos.row}-${agentPos.col}`;
@@ -57,7 +82,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-
+     // ====================
+    // chooseAction(stateKey)
+    // Devuelve una acción según la política epsilon-greedy:
+    // - Con probabilidad EPSILON elige una acción aleatoria.
+    // - De lo contrario, elige la acción con el valor Q más alto en el estado actual.
+    // ====================
     function chooseAction(stateKey) {
         if (Math.random() < EPSILON) {
             return ACTIONS[Math.floor(Math.random() * 4)];
@@ -67,7 +97,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const bestActions = ACTIONS.filter((_, i) => qValues[i] === maxQ);
         return bestActions[Math.floor(Math.random() * bestActions.length)];
     }
-
+  // ====================
+    // getNextState(pos, action)
+    // Calcula la siguiente posición del agente en el laberinto según la acción dada.
+    // Si la acción lleva fuera de los límites o a una pared, el agente permanece en la posición actual.
+    // ====================
     function getNextState(pos, action) {
         let { row, col } = pos;
         if (action === 'up') row--;
@@ -84,17 +118,29 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return { row, col };
     }
-
+// ====================
+    // getReward(pos)
+    // Retorna el reward según la posición:
+    // +100 si es la meta (G), -1 en cualquier otro caso.
+    // ====================
     function getReward(pos) {
         return mazeLayout[pos.row][pos.col] === 'G' ? 100 : -1;
     }
-
+ // ====================
+    // findChar(char)
+    // Busca en el laberinto la posición de un carácter específico (S o G) y devuelve su posición.
+    // ====================
     function findChar(char) {
         for (let r = 0; r < gridSize; r++)
             for (let c = 0; c < gridSize; c++)
                 if (mazeLayout[r][c] === char)
                     return { row: r, col: c };
     }
+     // ====================
+    // drawMaze()
+    // Dibuja visualmente el laberinto en el DOM, coloreando start, goal, wall y path.
+    // Inicializa la visualización del agente en su posición inicial.
+    // ====================
 
     function drawMaze() {
         mazeContainer.innerHTML = '';
@@ -111,6 +157,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         updateAgentVisual(findChar('S'));
     }
+    
+    // ====================
+    // updateAgentVisual()
+    // Actualiza la posición visual del agente en el laberinto.
+    // ====================
 
     function updateAgentVisual() {
         document.querySelectorAll('.agent').forEach(a => a.remove());
@@ -118,6 +169,12 @@ document.addEventListener('DOMContentLoaded', function() {
         agent.className = 'agent';
         document.getElementById(`cell-${agentPos.row}-${agentPos.col}`).appendChild(agent);
     }
+    // ====================
+    // visualizePolicyAndValues()
+    // Muestra un heatmap y flechas en el laberinto indicando:
+    // - Valor Q máximo de cada celda.
+    // - Acción óptima (flecha) aprendida por el agente en cada celda.
+    // ====================
 
     function visualizePolicyAndValues() {
         let maxQOverall = -Infinity;
@@ -160,6 +217,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
+     // ====================
+    // setupChart()
+    // Inicializa un gráfico de líneas usando D3.js para visualizar:
+    // - Episodios en el eje X.
+    // - Cantidad de pasos por episodio en el eje Y.
+    // ====================
 
     function setupChart() {
         const margin = { top: 30, right: 30, bottom: 40, left: 50 };
@@ -207,6 +270,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         chart = svg;
     }
+    // ====================
+    // updateChart()
+    // Actualiza el gráfico con la historia de episodios y pasos completados por episodio.
+    // ====================
 
     function updateChart() {
         if (!chart || episodeHistory.length === 0) return;
@@ -220,6 +287,10 @@ document.addEventListener('DOMContentLoaded', function() {
             .duration(200)
             .attr("d", line);
     }
+     // ====================
+    // startNewEpisode()
+    // Inicia un nuevo episodio reiniciando pasos y colocando al agente en la posición de inicio.
+    // ====================
 
 
     function startNewEpisode() {
@@ -227,6 +298,10 @@ document.addEventListener('DOMContentLoaded', function() {
         steps = 0;
         agentPos = findChar('S');
     }
+     // ====================
+    // updateUI(reward)
+    // Actualiza los contadores en la interfaz (episodio, pasos, último reward).
+    // ====================
 
     function updateUI(reward) {
         episodeSpan.textContent = episode;
@@ -236,12 +311,20 @@ document.addEventListener('DOMContentLoaded', function() {
             rewardSpan.className = reward > 0 ? 'positive' : 'negative';
         }
     }
+     // ====================
+    // toggleButtons(disabled)
+    // Activa o desactiva botones y sliders según el estado de la simulación.
+    // ====================
 
     function toggleButtons(disabled) {
         [startPauseBtn, resetBtn, alphaSlider, gammaSlider, epsilonSlider].forEach(b => {
             b.disabled = disabled;
         });
     }
+    // ====================
+    // toggleSimulation()
+    // Inicia o pausa la simulación del agente.
+    // ====================
 
     function toggleSimulation() {
         if (simulationInterval) {
@@ -258,6 +341,10 @@ document.addEventListener('DOMContentLoaded', function() {
             simulationInterval = setInterval(gameStep, 600 - speedSlider.value);
         }
     }
+     // ====================
+    // adjustSpeed()
+    // Ajusta la velocidad de la simulación según el slider de velocidad.
+    // ====================
 
     function adjustSpeed() {
         if (simulationInterval) {
@@ -265,6 +352,10 @@ document.addEventListener('DOMContentLoaded', function() {
             simulationInterval = setInterval(gameStep, 600 - speedSlider.value);
         }
     }
+    // ====================
+    // updateHyperparameters()
+    // Actualiza ALPHA, GAMMA y EPSILON desde los sliders y muestra sus valores.
+    // ====================
 
     function updateHyperparameters() {
         ALPHA = +alphaSlider.value;
@@ -274,6 +365,14 @@ document.addEventListener('DOMContentLoaded', function() {
         gammaValueSpan.textContent = GAMMA.toFixed(1);
         epsilonValueSpan.textContent = EPSILON.toFixed(1);
     }
+    // ====================
+    // initialize()
+    // Inicializa o reinicia toda la simulación:
+    // - Reinicia Q-Table.
+    // - Reinicia episodios.
+    // - Dibuja el laberinto.
+    // - Configura la gráfica.
+    // ====================
 
     function initialize() {
         if (simulationInterval) clearInterval(simulationInterval);
@@ -299,11 +398,18 @@ document.addEventListener('DOMContentLoaded', function() {
         startPauseBtn.classList.remove('pause');
         toggleButtons(false);
     }
+     // ====================
+    // visualizeAll()
+    // Actualiza visualmente la posición del agente y la política aprendida.
+    // ====================
 
     function visualizeAll() {
         updateAgentVisual();
         visualizePolicyAndValues();
     }
+     // ====================
+    // EVENTOS
+    // ====================
 
 
     startPauseBtn.onclick = toggleSimulation;
@@ -311,6 +417,8 @@ document.addEventListener('DOMContentLoaded', function() {
     speedSlider.oninput = adjustSpeed;
     [alphaSlider, gammaSlider, epsilonSlider].forEach(s => s.oninput = updateHyperparameters);
 
-
+     // ====================
+    // Inicialización al cargar la página
+    // ====================
     initialize();
 });
